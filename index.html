@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        #personnage {
+            width: 50px;
+            height: 50px;
+            /* border: 2px red solid;*/
+            background: url(./img/zelda.png) no-repeat;
+            background-position: 0 -150px;
+            /*animation: marche 0.7s steps(3) infinite;*/
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+
+
+        @keyframes marche {
+            0% {
+                background-position-x: 0;
+            }
+            100% {
+                background-position-x: -150px;
+            }
+        }
+
+
+    </style>
+</head>
+<body>
+<div id="personnage"></div>
+
+<script src="../js/jquery-3.4.1.min.js"></script>
+<script>
+    $(function () {
+        console.log("le DOM et jquery sont bien chargés !");
+
+        let perso = $('#personnage');
+
+        $(document).on('keydown', bouge);
+        $(document).on('keyup', stop);
+
+        function bouge(e) {
+            console.log(e.keyCode);
+            /* fleches 38 haut, 37 gauche, 40 bas, 39 droite */
+
+            /* SI le e.keyCode==37 OU e.keyCode==38 OU e.keyCode==40
+            ALORS
+            j'ajoute la methode css au perso. dans cette methode on mettra le déclenchement de l'animation de la marche
+             */
+
+            if (e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40) {
+                console.log('flèche du clavier');
+                perso.css('animation', 'marche 0.7s steps(3) infinite');
+            }
+
+            // largeur de la fenetre - taille du perso
+            let largeurFenetre = $(window).outerWidth() - 50;
+
+            // hauteur de la fenetre - taille du perso
+            let hauteurFenetre = $(window).outerHeight() - 50;
+
+            // Position du bord gauche du personnage
+            // parseInt pour ne récupérer que la partie 'chiffre' ex: 15px => 15
+            var limiteGauche = parseInt(perso.css('left'));
+
+            // Position du bord haut du personnage
+            var limiteHaute = parseInt(perso.css('top'));
+
+            switch (e.keyCode) {
+                case 37 : // gauche
+                    perso.css('backgroundPositionY', '-50px');
+                    if (limiteGauche > 0) perso.css('left', '-=5');
+                    break;
+                case 38 : // haut
+                    perso.css('backgroundPositionY', '-100px');
+                    if (limiteHaute > 0) perso.css('top', '-=5');
+                    break;
+                case 39 : // droite
+                    perso.css('backgroundPositionY', '0');
+                    if (limiteGauche < largeurFenetre) perso.css('left', '+=5');
+                    break;
+                case 40 : // bas
+                    perso.css('backgroundPositionY', '-150px');
+                    if (limiteHaute < hauteurFenetre) perso.css('top', '+=5');
+                    break;
+            }
+
+        } // fin de la fonction bouge
+
+        function stop() {
+            perso.css('animation', 'none');
+        }
+
+
+    }) // FIN DU SCOPE JQuery
+    //exo
+    //https://openclassrooms.com/fr/courses/1631636-simplifiez-vos-developpements-javascript-avec-jquery/1635969-un-jeu-en-jquery
+</script>
+</body>
+</html>
